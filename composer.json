@@ -1,0 +1,25 @@
+{
+    "name": "plus65/sprig",
+    "description": "Plus65 git brancher",
+    "authors": [
+        {
+            "name": "Arnel Labarda",
+            "email": "aqlx86@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/console": "^3.1",
+        "phpseclib/phpseclib": "^2.0",
+        "ggioffreda/git": "~0.1",
+        "rayne/semantic-versioning": "^1.0",
+        "naneau/semver": "^0.0.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sprig\\": "src/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}

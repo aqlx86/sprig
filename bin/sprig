@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Sprig\Command;
+use Symfony\Component\Console\Application;
+
+$application = new Application('Sprig', '@package_version@');
+
+$application->add(new Command\HelloCommand());
+$application->add(new Command\InitialiseCommand());
+$application->add(new Command\Feature\CreateCommand());
+
+$application->run();
