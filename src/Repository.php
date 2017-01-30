@@ -5,13 +5,24 @@ namespace Sprig;
 use Sprig\Versions;
 use Gioffreda\Component\Git\Git;
 
-class Repository
+use Naneau\SemVer\Sort;
+
+use Sprig\Repository\Branch;
+use Sprig\Repository\BranchVersion;
+
+abstract class Repository
 {
     protected $git;
 
+    protected $base;
+
+    protected $branches = [];
+
     public function __construct()
     {
-        $this->git = Git::create('/Users/plus65ph-01/Code/winfun88');
+        $this->git = Git::create('/Users/plus65ph-01/Code/tests/dummy');
+
+        $this->load_branch_list();
     }
 
     public function fetch()
@@ -19,55 +30,43 @@ class Repository
         $this->git->fetch();
     }
 
-    public function branches()
+    public function load_branch_list()
     {
         $branches = [];
 
         foreach ($this->git->getBranches() as $branch => $value)
         {
-            $name = substr($branch, strrpos($branch, '/'));
+            $branch = str_replace('remotes/origin/', '', $branch);
 
             $excluded_branches = ['master', '/master', '/HEAD'];
 
-            if (in_array($name, $excluded_branches))
+            if (in_array($branch, $excluded_branches))
                 continue;
 
-            $branches[] = $name;
+            $name = substr($branch, strrpos($branch, '/') + 1);
+
+            if (substr($branch, 0, strrpos($branch, '/')) == $this->base)
+                $branches[] = $name;
         }
 
-        return $branches;
+        $branches = array_unique($branches);
+
+        // $branches = Sort::sort($branches);
+
+        //$lists = [];
+
+        foreach ($branches as $branch)
+        {
+            $this->branches[] = new Branch($this->base, $branch);
+        }
     }
 
-    public function features()
+    public function current()
     {
-        $branches = array_map(function($value) {
-
-            if (substr($value, 1, 1) == 'f')
-                return substr($value, 2);
-
-        }, $this->branches());
-
-        $versions = new Versions($branches);
-
-//        $l = $versions->current();
-
-//        print_r($l->getMinor());
-
-        return (array) $versions->get();
+        return end ($this->branches);
     }
 
-    public function new_feature_version()
-    {
+    abstract public function create_branch($name, $version);
 
-    }
-
-    public function releases()
-    {
-
-    }
-
-    public function hotfixes()
-    {
-
-    }
+    abstract public function next_version();
 }

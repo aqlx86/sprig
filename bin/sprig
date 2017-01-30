@@ -11,6 +11,8 @@ $application = new Application('Sprig', '@package_version@');
 
 $application->add(new Command\HelloCommand());
 $application->add(new Command\InitialiseCommand());
+$application->add(new Command\Release\ReleaseCreateCommand());
+$application->add(new Command\Release\ReleaseBranchesCommand());
 $application->add(new Command\Feature\CreateCommand());
 
 $application->run();
